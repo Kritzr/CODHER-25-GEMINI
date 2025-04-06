@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureNews - Video News Translator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+    --primary: #4361ee;
+    --secondary: #3f37c9;
+    --accent: #4895ef;
+    --light: #f8f9fa;
+    --dark: #212529;
+    --gradient-primary: linear-gradient(135deg, #4361ee, #3a0ca3);
+    --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 15px 30px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Navigation Styling */
+.navbar {
+    padding: 15px 0;
+    background: rgba(33, 37, 41, 0.95) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 800;
+    letter-spacing: 1px;
+    font-size: 1.8rem;
+}
+
+.navbar-brand span {
+    color: var(--accent);
+    position: relative;
+}
+
+.navbar-brand span::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+    padding: 10px 15px;
+    transition: var(--transition);
+    position: relative;
+}
+
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: var(--transition);
+    transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 70%;
+}
+
+.navbar .btn-primary {
+    background: var(--gradient-primary);
+    border: none;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+}
+
+/* Hero Section Enhancement */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("/api/placeholder/1920/1080");
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 150px 0 100px;
+    margin-bottom: 50px;
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.3), rgba(63, 55, 201, 0.3));
+    z-index: 1;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-section h1 {
+    font-weight: 800;
+    margin-bottom: 25px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    font-size: 3.5rem;
+}
+
+.hero-section p {
+    font-size: 1.3rem;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    max-width: 700px;
+    margin: 0 auto 35px;
+}
+
+.hero-section .btn {
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    background: var(--gradient-primary);
+    border: none;
+    box-shadow: 0 10px 20px rgba(67, 97, 238, 0.4);
+    transition: var(--transition);
+}
+
+.hero-section .btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(67, 97, 238, 0.5);
+}
+
+/* Upload Container Styling */
+.upload-container {
+    background-color: white;
+    border-radius: 25px;
+    box-shadow: var(--shadow-md);
+    padding: 50px;
+    margin-bottom: 50px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: var(--gradient-primary);
+}
+
+.upload-container:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.upload-container h2 {
+    font-weight: 700;
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+}
+
+.upload-container h2::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+.drop-area {
+    border: 3px dashed #dee2e6;
+    border-radius: 20px;
+    padding: 60px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    background-color: #f8f9fa;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.drop-area:hover, .drop-area.dragover {
+    border-color: var(--primary);
+    background-color: rgba(67, 97, 238, 0.05);
+    transform: scale(1.01);
+}
+
+.upload-icon {
+    font-size: 70px;
+    color: var(--primary);
+    margin-bottom: 25px;
+    transition: var(--transition);
+}
+
+.drop-area:hover .upload-icon {
+    transform: translateY(-5px);
+}
+
+/* Language Select Styling */
+.language-select {
+    background-color: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border: 1px solid #eee;
+}
+
+.language-select:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.language-select label {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 10px;
+}
+
+.form-select {
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #e0e0e0;
+}
+
+.form-select:focus {
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    border-color: var(--primary);
+}
+
+/* Button styling */
+.btn-primary {
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: 50px;
+    padding: 14px 35px;
+    font-weight: 600;
+    transition: var(--transition);
+    box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(67, 97, 238, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+}
+
+.btn-lg {
+    padding: 16px 40px;
+    font-size: 1.1rem;
+}
+
+/* Feature cards enhancement */
+.feature-card {
+    background-color: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    text-align: center;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.feature-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
+    transition: var(--transition);
+    transform-origin: left;
+}
+
+.feature-card:hover::before {
+    transform: scaleX(1);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-md);
+}
+
+.feature-icon {
+    font-size: 50px;
+    color: var(--primary);
+    margin-bottom: 25px;
+    transition: var(--transition);
+    background: rgba(67, 97, 238, 0.1);
+    height: 100px;
+    width: 100px;
+    line-height: 100px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.1);
+    color: var(--accent);
+}
+
+.feature-card h4 {
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* Recent translations cards */
+.recent-translation {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 30px;
+    transition: var(--transition);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.recent-translation:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-md);
+}
+
+.recent-translation img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.recent-translation:hover img {
+    transform: scale(1.05);
+}
+
+.recent-translation .card-body {
+    padding: 25px;
+}
+
+.recent-translation h5 {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.badge {
+    padding: 8px 12px;
+    border-radius: 30px;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+/* Progress bar styling */
+.progress {
+    height: 12px;
+    border-radius: 20px;
+    background-color: #f0f0f0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: var(--gradient-primary);
+    border-radius: 20px;
+    transition: width 0.5s ease;
+}
+
+/* File preview */
+.file-preview {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 25px;
+    display: none;
+    border: 1px solid #eee;
+    transition: var(--transition);
+}
+
+.file-preview:hover {
+    box-shadow: var(--shadow-sm);
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+}
+
+.file-icon {
+    font-size: 35px;
+    color: var(--primary);
+    margin-right: 20px;
+}
+
+/* Footer enhancement */
+footer {
+    background-color: var(--dark);
+    color: white;
+    padding: 70px 0 40px;
+    margin-top: 80px;
+    position: relative;
+}
+
+footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--gradient-primary);
+}
+
+footer h4, footer h5 {
+    font-weight: 600;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+footer h4::after, footer h5::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 30px;
+    height: 3px;
+    background: var(--accent);
+}
+
+footer ul li {
+    margin-bottom: 10px;
+}
+
+footer ul li a {
+    color: #ddd;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+footer ul li a:hover {
+    color: var(--accent);
+    padding-left: 5px;
+}
+
+.social-icon {
+    font-size: 24px;
+    color: white;
+    margin-right: 15px;
+    transition: var(--transition);
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+    text-align: center;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+}
+
+.social-icon:hover {
+    color: white;
+    background: var(--accent);
+    transform: translateY(-5px) rotate(360deg);
+}
+
+/* Processing animation enhancement */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.processing-animation {
+    animation: pulse 2s infinite;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 100px 0 70px;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    
+    .upload-container {
+        padding: 30px;
+    }
+    
+    .feature-card, .recent-translation {
+        margin-bottom: 20px;
+    }
+    
+    footer {
+        padding: 50px 0 30px;
+    }
+}
+
+/* Input focus states */
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    border-color: var(--primary) !important;
+}
+
+/* Section titles */
+section h2 {
+    font-weight: 700;
+    margin-bottom: 40px;
+    position: relative;
+    display: inline-block;
+}
+
+section h2::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+section .text-center h2::after {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Newsletter input */
+footer .input-group .form-control {
+    border-radius: 50px 0 0 50px;
+    padding: 12px 20px;
+    border: none;
+}
+
+footer .input-group .btn {
+    border-radius: 0 50px 50px 0;
+    padding: 12px 20px;
+    background: var(--accent);
+}
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Secure<span>News</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#upload">How It Works</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-4">Translate News Videos Instantly</h1>
+            <p class="lead mb-5">Upload news videos in any language and get AI-powered translations with context-aware accuracy</p>
+            <a href="#upload" class="btn btn-primary btn-lg px-5">Start Translating</a>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section id="upload" class="container">
+        <div class="upload-container">
+            <h2 class="text-center mb-4">Upload Your News Video</h2>
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <form id="uploadForm">
+                        <input type="file" id="fileInput" class="d-none" accept="video/*">
+                        <div class="drop-area" id="dropArea">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <h4>Drag & Drop Your Video Here</h4>
+                            <p class="text-muted mb-4">or</p>
+                            <button type="button" class="btn btn-primary" id="browseBtn">Browse Files</button>
+                            <p class="text-muted mt-3">Supported formats:.wav , mp4 (Max: 500MB)</p>
+                        </div>
+                        
+                        <!-- File Preview (Initially Hidden) -->
+                        <div class="file-preview" id="filePreview">
+                            <div class="file-info">
+                                <i class="fas fa-file-video file-icon"></i>
+                                <div>
+                                    <h5 id="fileName">video.mp4</h5>
+                                    <p class="text-muted mb-0" id="fileSize">0 MB</p>
+                                </div>
+                                <button type="button" class="btn btn-outline-danger ms-auto" id="removeFile">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6 mb-3">
+                                <div class="language-select">
+                                    <label for="sourceLanguage" class="form-label">Source Language</label>
+                                    <select class="form-select" id="sourceLanguage">
+                                        <option value="auto">Auto-detect</option>
+                                        <option value="en">English</option>
+                                        <option value="es">Spanish</option>
+                                        <option value="fr">French</option>
+                                        <option value="de">German</option>
+                                        <option value="zh">Chinese</option>
+                                        <option value="ru">Russian</option>
+                                        <option value="ja">Japanese</option>
+                                        <option value="ar">Arabic</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="language-select">
+                                    <label for="targetLanguage" class="form-label">Target Language</label>
+                                    <select class="form-select" id="targetLanguage">
+                                        <option value="en">English</option>
+                                        <option value="es">Spanish</option>
+                                        <option value="fr">French</option>
+                                        <option value="de">German</option>
+                                        <option value="zh">Chinese</option>
+                                        <option value="ru">Russian</option>
+                                        <option value="ja">Japanese</option>
+                                        <option value="ar">Arabic</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg" id="translateBtn" disabled>
+                                <i class="fas fa-language me-2"></i> Translate Video
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Processing Section (Initially Hidden) -->
+        <div class="upload-container" id="processingSection" style="display: none;">
+            <div class="text-center">
+                <i class="fas fa-cogs upload-icon processing-animation"></i>
+                <h3 class="mb-4">Processing Your Video</h3>
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span id="currentStep">Transcribing audio...</span>
+                                <span id="progressPercentage">25%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: 25%" id="progressBar"></div>
+                            </div>
+                        </div>
+                        <p class="text-muted">This may take a few minutes depending on video length.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="container my-5">
+        <h2 class="text-center mb-5">Why Choose SecureNews</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-robot feature-icon"></i>
+                    <h4>AI-Powered Accuracy</h4>
+                    <p>Our advanced LLM+RAG technology ensures context-aware translations that understand news terminology and current events.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-bolt feature-icon"></i>
+                    <h4>Lightning Fast</h4>
+                    <p>Get your translated news videos in minutes, not hours. Stay on top of breaking news across language barriers.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-globe feature-icon"></i>
+                    <h4>Multiple Languages</h4>
+                    <p>Translate to and from over many languages with consistent quality and accuracy across all language pairs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <h4>SecureNews</h4>
+                    <p>Breaking language barriers in global news with AI-powered video translation.</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Connect With Us</h5>
+                    <div class="mt-3">
+                        <a href="https://github.com/Kritzr/CODHER-25-GEMINI.git" class="social-icon"><i class="fab fa-github"></i></a>
+                        <a href="https://docs.google.com/presentation/d/1UkD9-hQU4DeZH4mP_p6qcGjlYNz_iCExr03cgxeJ7oc/edit?usp=sharing" class="social-icon"><i class="fab fa-slideshare"></i></a>
+                        <a href="https://www.linkedin.com/in/krithika-ravishankar/" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.linkedin.com/in/deekshikaa-palanivel-327025284/" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <div class="mt-2">
+                        <span class="text-white-50 small me-3">Our GitHub</span>
+                        <span class="text-white-50 small me-3">Our PPT</span>
+                        <span class="text-white-50 small me-3">Our LinkedIn</span>
+                        
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 SecureNews. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const dropArea = document.getElementById('dropArea');
+            const browseBtn = document.getElementById('browseBtn');
+            const filePreview = document.getElementById('filePreview');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const removeFile = document.getElementById('removeFile');
+            const translateBtn = document.getElementById('translateBtn');
+            const uploadForm = document.getElementById('uploadForm');
+            const processingSection = document.getElementById('processingSection');
+            
+            // Browse button click
+            browseBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // File selection
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+            
+            // Drag and drop events
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropArea.classList.add('dragover');
+            }
+            
+            function unhighlight() {
+                dropArea.classList.remove('dragover');
+            }
+            
+            // Handle dropped files
+            dropArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            });
+            
+            // Process selected files
+            function handleFiles(files) {
+                if (files.length > 0) {
+                    const file = files[0];
+                    
+                    // Check if file is video
+                    if (!file.type.startsWith('video/')) {
+                        alert('Please select a video file.');
+                        return;
+                    }
+                    
+                    // Check file size (max 500MB)
+                    if (file.size > 500 * 1024 * 1024) {
+                        alert('File is too large. Maximum size is 500MB.');
+                        return;
+                    }
+                    
+                    // Display file info
+                    fileName.textContent = file.name;
+                    fileSize.textContent = formatFileSize(file.size);
+                    filePreview.style.display = 'block';
+                    translateBtn.disabled = false;
+                }
+            }
+            
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            // Remove selected file
+            removeFile.addEventListener('click', function() {
+                fileInput.value = '';
+                filePreview.style.display = 'none';
+                translateBtn.disabled = true;
+            });
+            
+            // Handle form submission
+            uploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (fileInput.files.length === 0) {
+                    alert('Please select a video file first.');
+                    return;
+                }
+                
+                // Hide upload form and show processing
+                uploadForm.closest('.upload-container').style.display = 'none';
+                processingSection.style.display = 'block';
+                
+                // Simulate processing
+                simulateProcessing();
+            });
+            
+            // Simulate video processing
+            function simulateProcessing() {
+                const progressBar = document.getElementById('progressBar');
+                const progressPercentage = document.getElementById('progressPercentage');
+                const currentStep = document.getElementById('currentStep');
+                const steps = [
+                    'Uploading video...',
+                    'Transcribing audio...',
+                    'Analyzing content with RAG...',
+                    'Translating content...',
+                    'Generating subtitles...',
+                    'Finalizing video...'
+                ];
+                
+                let currentProgress = 0;
+                let currentStepIndex = 0;
+                
+                const interval = setInterval(() => {
+                    if (currentProgress >= 100) {
+                        clearInterval(interval);
+                        
+                        // Redirect to results page (in a real app)
+                        setTimeout(() => {
+                            alert('Translation complete! In a real app, you would be redirected to view your translated video.');
+                            
+                            // Reset UI for demo purposes
+                            processingSection.style.display = 'none';
+                            uploadForm.closest('.upload-container').style.display = 'block';
+                            fileInput.value = '';
+                            filePreview.style.display = 'none';
+                            translateBtn.disabled = true;
+                        }, 1000);
+                        
+                        return;
+                    }
+                    
+                    currentProgress += 5;
+                    if (currentProgress % 20 === 0 && currentStepIndex < steps.length - 1) {
+                        currentStepIndex++;
+                        currentStep.textContent = steps[currentStepIndex];
+                    }
+                    
+                    progressBar.style.width = currentProgress + '%';
+                    progressPercentage.textContent = currentProgress + '%';
+                }, 300);
+            }
+        });
+    </script>
+</body>
+</html>
